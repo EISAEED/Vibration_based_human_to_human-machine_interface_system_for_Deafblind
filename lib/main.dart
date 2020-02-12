@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
+import 'package:morse/morse.dart';
 
 class MyAppBar extends StatefulWidget {
   MyAppBar({Key key, this.title}) : super(key: key);
@@ -24,14 +25,41 @@ class _MyAppBarState extends State<MyAppBar> {
       Vibration.vibrate(amplitude: 128);
       }
 
-      Vibration.vibrate(duration: 1000);
+      final String message = 'welcome';
+      String encodedMessage =  new Morse(message).encode();
+
+      List<String> MorsePattern = encodedMessage.split('');
+
+      print(MorsePattern);
+
+      List<int> INTMorsePattern = [];
+
+      for (var i= 0; i < MorsePattern.length; i++)
+        {
+          if ((MorsePattern[i] == ".") || (MorsePattern[i] == " ."))
+          {
+            INTMorsePattern.add(200);
+          }
+          else if ((MorsePattern[i] == "-") || (MorsePattern[i] == " -"))
+          {
+            INTMorsePattern.add(600);
+          }
+          if ((MorsePattern[i] == "  ") || (MorsePattern[i] == " "))
+          {
+            INTMorsePattern.add(600);
+          }
+        }
+
+      print(INTMorsePattern);
+
+      Vibration.vibrate(pattern: INTMorsePattern);
       });
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Column(
+      child: Row(
         children: <Widget>[IconButton(icon: Icon(Icons.menu), tooltip: 'Navigation menu', onPressed: _incrementCounter,),],
       ),
     );
